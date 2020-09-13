@@ -1,3 +1,9 @@
+```text
+---
+layout: post
+title: Blogging Like a Hacker
+---
+```
 安装软件包命令，参数指明了（ v 展示正在安装的文件信息 
 
 1 #rpm -i example.rpm 安装 example.rpm 包；
