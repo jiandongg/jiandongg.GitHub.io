@@ -4,17 +4,6 @@ layout: post
 title: Blogging Like a Hacker
 ---
 ```
-安装软件包命令，参数指明了（ v 展示正在安装的文件信息 
-
-1 #rpm -i example.rpm 安装 example.rpm 包；
-2 #rpm -iv example.rpm 安装 example.rpm 包并在安装过程中显示正在安装的文件信息；
-3 #rpm -ivh example.rpm 安装 example.rpm 包并在安装过程中显示正在安装的文件信息及安装进度
-rpm -ivh your_package_name
- 
-如：rpm -ivh jdk-8u111-linux-x64.rpm
-参考来源：https://www.cnblogs.com/dadonggg/p/8191390.html 
-
-rpm 常用命令
 1.安装一个包 （展示正在安装的文件信息以及安装进度）
 \# rpm -ivh 
  
@@ -56,137 +45,20 @@ rpm 常用命令
 RPM包括是使用cpio格式打包的，因此可以先转成cpio然后解压，如下所示：
  
 rpm2cpio xxx.rpm | cpio -div
- 
 
-关于rpm相关命令的帮助放在下方：
+13.安装rpm包 rpm -ivh xxx.rpm
 
-[root@localhost-11 opt]# rpm --help
-Usage: rpm [OPTION...]
- --quiet
- 
-Query/Verify package selection options:
- -a, --all             query/verify all packages
- -f, --file            query/verify package(s) owning file
- -g, --group            query/verify package(s) in group
- -p, --package           query/verify a package file
- -W, --ftswalk           query/verify package(s) from TOP file tree walk
- --pkgid              query/verify package(s) with package identifier
- --hdrid              query/verify package(s) with header identifier
- --fileid             query/verify package(s) with file identifier
- --specfile            query a spec file
- --triggeredby           query the package(s) triggered by the package
- --whatrequires          query/verify the package(s) which require a dependency
- --whatprovides          query/verify the package(s) which provide a dependency
- --nomanifest           do not process non-package files as manifests
- 
-Query options (with -q or --query):
- -c, --configfiles         list all configuration files
- -d, --docfiles          list all documentation files
- --dump              dump basic file information
- -l, --list            list files in package
- --queryformat=QUERYFORMAT     use the following query format
- -s, --state            display the states of the listed files
- 
-Verify options (with -V or --verify):
- --nofiledigest          don't verify digest of files
- --nomd5              don't verify digest of files
- --nofiles             don't verify files in package
- --nodeps             don't verify package dependencies
- --noscript            don't execute verify script(s)
- 
-File tree walk options (with --ftswalk):
- --comfollow            follow command line symlinks
- --logical             logical walk
- --nochdir             don't change directories
- --nostat             don't get stat info
- --physical            physical walk
- --seedot             return dot and dot-dot
- --xdev              don't cross devices
- --whiteout            return whiteout information
- 
-Signature options:
- --addsign             sign package(s) (identical to --resign)
- -K, --checksig          verify package signature(s)
- --delsign             delete package signatures
- --import             import an armored public key
- --resign             sign package(s) (identical to --addsign)
- --nodigest            don't verify package digest(s)
- --nosignature           don't verify package signature(s)
- 
-Database options:
- --initdb             initialize database
- --rebuilddb            rebuild database inverted lists from installed package headers
- 
-Install/Upgrade/Erase options:
- --aid               add suggested packages to transaction
- --allfiles            install all files, even configurations which might otherwise be skipped
- --allmatches           remove all packages which match <package> (normally an error is generated if <package> specified multiple packages)
- --badreloc            relocate files in non-relocatable package
- -e, --erase=<package>+      erase (uninstall) package
- --excludedocs           do not install documentation
- --excludepath=<path>       skip files with leading component <path> 
- --fileconflicts          detect file conflicts between packages
- --force              short hand for --replacepkgs --replacefiles
- -F, --freshen=<packagefile>+   upgrade package(s) if already installed
- -h, --hash            print hash marks as package installs (good with -v)
- --ignorearch           don't verify package architecture
- --ignoreos            don't verify package operating system
- --ignoresize           don't check disk space before installing
- -i, --install           install package(s)
- --justdb             update the database, but do not modify the filesystem
- --nodeps             do not verify package dependencies
- --nofiledigest          don't verify digest of files
- --nomd5              don't verify digest of files (obsolete)
- --nocontexts           don't install file security contexts
- --noorder             do not reorder package installation to satisfy dependencies
- --nosuggest            do not suggest missing dependency resolution(s)
- --noscripts            do not execute package scriptlet(s)
- --notriggers           do not execute any scriptlet(s) triggered by this package
- --oldpackage           upgrade to an old version of the package (--force on upgrades does this automatically)
- --percent             print percentages as package installs
- --prefix=<dir>          relocate the package to <dir>, if relocatable
- --relocate=<old>=<new>      relocate files from path <old> to <new>
- --replacefiles          ignore file conflicts between packages
- --replacepkgs           reinstall if the package is already present
- --test              don't install, but tell if it would work or not
- -U, --upgrade=<packagefile>+   upgrade package(s)
- 
-Common options for all rpm modes and executables:
- -D, --define='MACRO EXPR'     define MACRO with value EXPR
- -E, --eval='EXPR'         print macro expansion of EXPR
- --macros=<FILE:...>        read <FILE:...> instead of default file(s)
- --nodigest            don't verify package digest(s)
- --nosignature           don't verify package signature(s)
- --rcfile=<FILE:...>        read <FILE:...> instead of default file(s)
- -r, --root=ROOT          use ROOT as top level directory (default: "/")
- --querytags            display known query tags
- --showrc             display final rpmrc and macro configuration
- --quiet              provide less detailed output
- -v, --verbose           provide more detailed output
- --version             print the version of rpm being used
- 
-Options implemented via popt alias/exec:
- --scripts             list install/erase scriptlets from package(s)
- --setperms            set permissions of files in a package
- --setugids            set user/group ownership of files in a package
- --conflicts            list capabilities this package conflicts with
- --obsoletes            list other packages removed by installing this package
- --provides            list capabilities that this package provides
- --requires            list capabilities required by package(s)
- --info              list descriptive information from package(s)
- --changelog            list change logs for this package
- --xml               list metadata in xml
- --triggers            list trigger scriptlets from package(s)
- --last              list package(s) by install time, most recent first
- --dupes              list duplicated packages
- --filesbypkg           list all files from each package
- --fileclass            list file names with classes
- --filecolor            list file names with colors
- --fscontext            list file names with security context from file system
- --fileprovide           list file names with provides
- --filerequire           list file names with requires
- --filecaps            list file names with POSIX1.e capabilities
- 
-Help options:
- -?, --help            Show this help message
- --usage              Display brief usage message
+出现报错：
+
+error: Failed dependencies:
+        libpcap = 14:1.5.3-12.el7 is needed by libpcap-devel-14:1.5.3-12.el7.x86_64
+
+时：方案一：
+
+ yum install  libncurses.so.5 libtinfo.so.5（缺啥引啥）
+
+方案二
+
+rpm -ivh MySQL-client-5.6.22-1.el6.i686.rpm --nodeps --force （加入两个参数，安装时不再分析包之间的依赖关系而直接安装）
+
+14.查看glibc版本号 rpm -qa | grep glibc
