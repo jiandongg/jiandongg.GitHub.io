@@ -1,5 +1,7 @@
 # dell vep4600初始化与安装
 
+——.制作安装u盘，进入服务器boot界面设置安装盘并启动，安装linux操作系统
+
 技术文档：https://www.dell.com/support/home/zh-cn/product-support/product/virtual-edge-platform-4600-4c/docs
 
 1.使用“串口线”连接设备的console口，按照说明书参数配置要求连接设备
@@ -8,7 +10,7 @@
 
 3.按照说明书配置启动u盘等参数，启动安装centos系统，配置好网口ip地址
 
-4.安装完毕后，拔出u盘，重启系统，选择合适的网口使用ssh直连ip地址即可
+4.安装完毕后，拔出u盘，重启系统，选择合适的网口使用ssh远程连接ip地址即可
 
 注意事项：
 
@@ -31,3 +33,7 @@
 ~~4.root-seasw~~
 
 ~~5.root-CM5QY03!~~
+
+~~6.seasw123.~~
+
+~~7.none~~
