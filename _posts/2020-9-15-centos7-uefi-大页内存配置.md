@@ -70,3 +70,16 @@ grub2-mkconfig -o /boot/grub2/grub.cfg
 
  isolcpus=1-4 nohz_full=1-4 rcu_nocbs=1-4
 
+备注：使用lscpu查看cpu情况，其中
+
+Threads per core：每个核有几个线程
+
+CPU Socket：有几个物理CPU
+
+core per socker：每个物理CPU有几个核心
+
+NUMA nodes : Non Uniform Memory Access Architecture，使众多服务器像单一系统那样运转，几个NUMA
+
+CPUs：有几个逻辑的处理器，=物理CPU个数*每个物理CPU核心个数*每个核心的线程个数
+
+其中，我们能够配置CPU隔离的参数是核心单位
