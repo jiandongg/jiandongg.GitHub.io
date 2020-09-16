@@ -1,9 +1,3 @@
-```text
----
-layout: post
-title: Blogging Like a Hacker
----
-```
 1.安装一个包 （展示正在安装的文件信息以及安装进度）
 \# rpm -ivh 
  
