@@ -74,6 +74,19 @@ if [ "x$default" = 'CentOS Linux (3.10.0-1127.el7.x86_64) 7 (Core)' ]; then defa
 
 备注：**对于legacy的普通bios启动方法**，可能修改的文件是/etc/default/grub，注意当下目录的切换（执行`grub2-mkconfig -o /boot/grub2/grub.cfg`命令时的路径应改为/etc/default/grub）和更改方式（linux_cmdline="xxxx"）的改变。
 
+注意：带内存插槽的机器在配置`grub2`命令时可能会出现以下警告：
+
+```
+[   69.579272] sr 0:0:0:0: [sr0] CDROM not ready.  Make sure there is a disc in the drive.
+[   69.589013] sr 0:0:0:1: [sr1] CDROM not ready.  Make sure there is a disc in the drive.
+[   69.598646] sr 0:0:0:2: [sr2] CDROM not ready.  Make sure there is a disc in the drive.
+[   69.608276] sr 0:0:0:3: [sr3] CDROM not ready.  Make sure there is a disc in the drive.
+```
+
+属于正常现象，不影响配置命令本身的执行效果。
+
+注意：在虚拟机上执行大页内存划分时，可能会因大页内存划分过多导致`HugePages_Total`比设定值少的情况。此时加大该虚拟机的分配内存即可
+
 B、
 
 **配置cpu隔离**1-4号逻辑核，则在后面加上以下描述：
@@ -160,3 +173,4 @@ Flags:...
 对于多numa机器，应注意将cpu隔离选择的逻辑核编号选择在同一个物理cpu中，即选择`2,4,6,8,10,12`的性能要优于`2,3,4,5,6,7`。
 
 因为跨numa，即跨物理cpu需要更远距离的信息传输。
+
