@@ -66,7 +66,9 @@ if [ "x$default" = 'CentOS Linux (3.10.0-1127.el7.x86_64) 7 (Core)' ]; then defa
 
 显示done代表配置完成
 
-6.重启生效，查看大页内存配置情况
+6.!!!重启生效!!!，查看大页内存配置情况
+
+`reboot`!!!一定要记得，重启，才能生效
 
 `grep -i huge /proc/meminfo`
 
@@ -91,7 +93,7 @@ B、
 
 **配置cpu隔离**1-4号逻辑核，则在后面加上以下描述：
 
- isolcpus=1-4 nohz_full=1-4 rcu_nocbs=1-4
+`isolcpus=1-4 nohz_full=1-4 rcu_nocbs=1-4`
 
 注意：尽量不要隔离0号逻辑cpu、不要将过多cpu都隔离，以免影响linux自身性能。
 
