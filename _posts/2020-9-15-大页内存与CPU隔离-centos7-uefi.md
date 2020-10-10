@@ -21,7 +21,7 @@ A、
 
 `vi grub.cfg`
 
-4.查找关键字”menuentry”启动项（在vim的命令模式输入`:/menuentry`，回车，按`n`查找下一项）。在menuentry代码段的特定位置添加“default_hugepagesz=1G hugepagesz=1G hugepages=16”，对每一个menuentry的代码段中都要加上。
+4.查找关键字”menuentry”启动项（在vim的命令模式输入`:/menuentry`，回车，按`n`查找下一项）。在menuentry代码段的特定位置添加`default_hugepagesz=1G hugepagesz=1G hugepages=16`，对每一个menuentry的代码段中都要加上。
 
 ```
 ### BEGIN /etc/grub.d/10_linux ###
