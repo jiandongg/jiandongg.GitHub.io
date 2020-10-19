@@ -42,4 +42,4 @@ struct.error: unpack requires a string argument of length 4
 
 6. 在/home/zhmy/LiteRadar/LiteRadar/目录下，运行命令解析app
 
-`python3 literadar.py /home/zhmy/app/com.douban.frodo.apk`
+`python3 /home/zhmy/LiteRadar/LiteRadar/literadar.py /home/zhmy/app/com.douban.frodo.apk`
