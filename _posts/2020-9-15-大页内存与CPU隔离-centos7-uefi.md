@@ -1,19 +1,30 @@
-**0.在boot界面，使用u盘安装系统时，可以得知系统是legacy（老式bios）或者是uefi（新式）启动。！！！**
+**在boot界面，使用u盘安装系统时，可以得知系统是legacy（老式bios）或者是uefi（新式）启动。！！！**
 
-A、
+以下**针对CentOS7的uefi启动方式**，挂载1GB*16的大页内存，挂载1-4号核作为cpu隔离：
 
-以下**针对CentOS7的uefi启动方式**，挂载1GB*16的大页内存：
+注意：不要把过多内存都配置为大页内存，防止影响linux自身性能，CPU隔离同理
 
-注意：不要把过多内存都配置为大页内存，防止影响linux自身性能
+0. 查看系统信息
 
-1.创建大页内存挂接点 
+`cat /proc/cmdline`系统启动加载
+
+`cat /proc/meminfo`内存
+
+`cat /proc/meminfo| grep -i huge`大页内存
+
+`lscpu`cpu信息
+
+1. 创建大页内存挂接点 
+
 `mkdir /mnt/huge_1GB`
+
 `mount -t hugetlbfs nodev /mnt/huge_1GB`
 
-2.在/etc/fstab文件末尾加入如下命令，使其重启后有效 
+2. 在/etc/fstab文件末尾加入如下命令，使其重启后有效 
+
 `nodev /mnt/huge_1GB hugetlbfs pagesize=1GB 0 0`
 
-3.修改配置文件中启动菜单的内核参数，注意做好原文件备份
+3. 修改配置文件中启动菜单的内核参数，注意做好原文件备份
 
 `cd /boot/efi/EFI/centos/`
 
@@ -21,9 +32,9 @@ A、
 
 `vi grub.cfg`
 
-4.查找关键字”menuentry”启动项（在vim的命令模式输入`:/menuentry`，回车，按`n`查找下一项）。在menuentry代码段的特定位置添加`default_hugepagesz=1G hugepagesz=1G hugepages=16`，对每一个menuentry的代码段中都要加上。
+4. 查找关键字”menuentry”启动项（在vim的命令模式输入`:/menuentry`，回车，按`n`查找下一项）。在menuentry代码段的特定位置添加`default_hugepagesz=1G hugepagesz=1G hugepages=16` `isolcpus=1-4 nohz_full=1-4 rcu_nocbs=1-4`，对每一个menuentry的代码段中都要加上。
 
-```
+```shell
 ### BEGIN /etc/grub.d/10_linux ###
 menuentry 'CentOS Linux (3.10.0-1127.el7.x86_64) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-1127.el7.x86_64-advanced-d648124d-f16b-4f63-a074-aef1f7bc06fc' {
 	load_video
@@ -37,7 +48,7 @@ menuentry 'CentOS Linux (3.10.0-1127.el7.x86_64) 7 (Core)' --class centos --clas
 	else
 	  search --no-floppy --fs-uuid --set=root 60ad466f-e10a-44c2-b1b1-61218721cd36
 	fi
-	linuxefi /vmlinuz-3.10.0-1127.el7.x86_64 root=UUID=d648124d-f16b-4f63-a074-aef1f7bc06fc ro default_hugepagesz=1G hugepagesz=1G hugepages=16 crashkernel=auto spectre_v2=retpoline console=ttyS0,115200 
+	linuxefi /vmlinuz-3.10.0-1127.el7.x86_64 root=UUID=d648124d-f16b-4f63-a074-aef1f7bc06fc ro default_hugepagesz=1G hugepagesz=1G hugepages=16 isolcpus=1-4 nohz_full=1-4 rcu_nocbs=1-4 crashkernel=auto spectre_v2=retpoline console=ttyS0,115200 
 	initrdefi /initramfs-3.10.0-1127.el7.x86_64.img
 }
 menuentry 'CentOS Linux (0-rescue-83cb142ebb1948a684b72eb8bf140996) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-0-rescue-83cb142ebb1948a684b72eb8bf140996-advanced-d648124d-f16b-4f63-a074-aef1f7bc06fc' {
@@ -51,7 +62,7 @@ menuentry 'CentOS Linux (0-rescue-83cb142ebb1948a684b72eb8bf140996) 7 (Core)' --
 	else
 	  search --no-floppy --fs-uuid --set=root 60ad466f-e10a-44c2-b1b1-61218721cd36
 	fi
-	linuxefi /vmlinuz-0-rescue-83cb142ebb1948a684b72eb8bf140996 root=UUID=d648124d-f16b-4f63-a074-aef1f7bc06fc ro default_hugepagesz=1G hugepagesz=1G hugepages=16 crashkernel=auto spectre_v2=retpoline console=ttyS0,115200 
+	linuxefi /vmlinuz-0-rescue-83cb142ebb1948a684b72eb8bf140996 root=UUID=d648124d-f16b-4f63-a074-aef1f7bc06fc ro default_hugepagesz=1G hugepagesz=1G hugepages=16 isolcpus=1-4 nohz_full=1-4 rcu_nocbs=1-4  crashkernel=auto spectre_v2=retpoline console=ttyS0,115200 
 	initrdefi /initramfs-0-rescue-83cb142ebb1948a684b72eb8bf140996.img
 }
 if [ "x$default" = 'CentOS Linux (3.10.0-1127.el7.x86_64) 7 (Core)' ]; then default='Advanced options for CentOS Linux>CentOS Linux (3.10.0-1127.el7.x86_64) 7 (Core)'; fi;
@@ -64,7 +75,7 @@ if [ "x$default" = 'CentOS Linux (3.10.0-1127.el7.x86_64) 7 (Core)' ]; then defa
 
 `grub2-mkconfig -o /boot/grub2/grub.cfg`（在该路径下会生成新的启动文件，可通过`ll`查看修改时间验证）
 
-显示done代表配置完成
+显示`done`代表配置完成
 
 6.!!!重启生效!!!，查看大页内存配置情况
 
@@ -74,9 +85,27 @@ if [ "x$default" = 'CentOS Linux (3.10.0-1127.el7.x86_64) 7 (Core)' ]; then defa
 
 `cat /proc/cmdline`
 
-备注：**对于legacy的普通bios启动方法**，可能修改的文件是/etc/default/grub，注意当下目录的切换（执行`grub2-mkconfig -o /boot/grub2/grub.cfg`命令时的路径应改为/etc/default/grub）和更改方式（linux_cmdline="xxxx"）的改变。
+## 番外：对于legacy的普通bios启动方法
 
-注意：带内存插槽的机器在配置`grub2`命令时可能会出现以下警告：
+可能修改的文件是
+
+`vi /etc/default/grub`
+
+增加字段格式为(注意要加在括号“”里！！！linux_cmdline="xxxx")：
+
+```shell
+GRUB_TIMEOUT=5
+GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
+GRUB_DEFAULT=saved
+GRUB_DISABLE_SUBMENU=true
+GRUB_TERMINAL_OUTPUT="console"
+GRUB_DISABLE_RECOVERY="true"
+GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet default_hugepagesz=1G hugepagesz=1G hugepages=16 isolcpus=1-4 nohz_full=1-4 rcu_nocbs=1-4"
+```
+
+在**当下目录**（`/etc/default/grub`）中，执行`grub2-mkconfig -o /boot/grub2/grub.cfg`，重启后`reboot`配置生效
+
+## 注意：带内存插槽的机器在配置`grub2`命令时可能会出现以下警告：
 
 ```
 [   69.579272] sr 0:0:0:0: [sr0] CDROM not ready.  Make sure there is a disc in the drive.
@@ -89,11 +118,9 @@ if [ "x$default" = 'CentOS Linux (3.10.0-1127.el7.x86_64) 7 (Core)' ]; then defa
 
 注意：在虚拟机上执行大页内存划分时，可能会因大页内存划分过多导致`HugePages_Total`比设定值少的情况。此时加大该虚拟机的分配内存即可
 
-B、
+## 关于CPU隔离
 
-**配置cpu隔离**1-4号逻辑核，则在后面加上以下描述：
-
-`isolcpus=1-4 nohz_full=1-4 rcu_nocbs=1-4`
+在后面加上以下描述：`isolcpus=1-4 nohz_full=1-4 rcu_nocbs=1-4`
 
 注意：尽量不要隔离0号逻辑cpu、不要将过多cpu都隔离，以免影响linux自身性能。
 

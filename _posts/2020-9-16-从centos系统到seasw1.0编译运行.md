@@ -14,11 +14,15 @@
 
    注意事项：大页内存的分配以2M或者1G为单位进行分配，分配时的参数可能有所不同，注意辨别。
 
-   2.5 安装依赖包：`yum`，最好是联网，或者是使用光盘源。见相关笔记。
+   2.5 安装依赖包：`yum`，最好是联网，或者是使用光盘源。见`使用光盘源作为yum源`笔记。
 
-   `yum upgrade`
+   `yum -y upgrade`
 
-   `yum install libpcap-devel（可能需要rpm安装）\kernel-devel\gcc\numactl-devel\gcc kernel-devel`
+   `yum -y update`
+
+   需要用rpm独立安装的libpcap、libpcap-devel库：
+
+   `rpm -ivh xxx.rpm`
 
    万不得已，可以使用rpm安装，但有依赖不全的风险。
 
@@ -104,7 +108,7 @@
 
    seasw.cli为配置文件，用来指导seasw的工作
 
-6. 根据seasw.cli配置文件所述，检查.asm文件，并生成ex.bin
+7. 根据seasw.cli配置文件所述，检查.asm文件，并生成ex.bin
 
    `seasw1.0/app/asm/`
 
@@ -114,7 +118,7 @@
 
    
 
-7. 执行seasw主程序
+8. 执行seasw主程序
 
 `./build/app/seasw_fe -c 0x55 -- -s seasw.cli`
 
@@ -128,14 +132,16 @@
 
 此后程序会进行正式的运行，并依照流表进行数据包转发工作
 
-8. 使用telnet连接交换机
+9. 使用telnet连接交换机
 
 `telnet 127.0.0.1 8086`
 
-9. 程序日志文件
+10. 程序日志文件
 
 `vi ./seasw1.0/app/seasw.log`
 
-10. 关于SINK_PCAP的宏配置文件
+11. 关于SINK_PCAP的宏配置文件
+
+12. 表项删除的两个主题：控制器下发命令或FE核主动删；表项超时FE核删除的两种方式：硬超时（表项安装到超时）、软超时（数据包表项命中到超时）
 
 seasw1.0m/lib/pof_common/rte_pof.h

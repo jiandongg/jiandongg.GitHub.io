@@ -1,0 +1,129 @@
+# dell vep4600初始化与安装
+
+## 观察vep4600机器，根据dell的文件区分其端口与设备信息
+
+## 安装备用电源
+
+参考dell说明文档，将空白电源面板处换上新的备用电源
+
+双手握住空白电源面板的卡口，拔出空白电源面板
+
+将备用电源`依照正确的方向和电源方位`缓缓插入，卡住则电源安装完毕
+
+## 安装rNDC承载卡与rNDC网卡
+
+参考dell邮件说明文档，开盖，将rNDC承载卡与rNDC网卡安装在机器上，关盖
+
+特别注意⚠️：
+
+1. 螺丝能拧紧就不要拧松
+
+2. 组件上的蓝色部分为接口结合部分，安装时要注意这部分的耦合，并且安装完后使劲按压，保证卡紧
+
+3. 吹去灰尘、接口尘埃
+
+## 使用console线连接vep4600
+
+参考dell系统安装文档，使用串口线连接vep4600，在插电启动时能够看到启动信息
+
+特别注意⚠️：
+
+1. 使用“串口线”连接设备的console口，按照说明书参数配置要求连接设备
+
+2. 仔细看清说明书中console线的位置，不要接错
+
+## 制作centos系统安装u盘
+
+准备centos7.iso，参考dell系统安装文档，制作安装u盘，根据手册中使用uefi模式制作系统盘
+
+## 为vep4600安装centos7系统
+
+将安装u盘插入机器，参考dell系统安装文档，手动安装linux操作系统
+
+特别注意⚠️：
+
+1. 配置好网口ip地址，便于后续使用ssh传输文件
+
+2. 在centos系统安装的network界面，可以对`安装rNDC承载卡与rNDC网卡`步骤的网卡是否正确识别作初步判断。
+
+系统自带的网络口：
+
+```shell
+[root@localhost usertools]# ifconfig |grep flag
+enp182s0f0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp182s0f1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp182s0f2: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp182s0f3: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp2s0f0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp2s0f1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp2s0f2: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp2s0f3: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp5s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+```
+
+两块rDNC网卡都成功识别的网络口（参考）：
+
+```shell
+[root@localhost usertools]# ifconfig |grep flag
+enp101s0f0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp101s0f1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp101s0f2: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp101s0f3: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+# enp182s0f0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+# enp182s0f1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+# enp182s0f2: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+# enp182s0f3: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp23s0f0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp23s0f1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp24s0f0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+enp24s0f1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+# enp2s0f0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+# enp2s0f1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+# enp2s0f2: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+# enp2s0f3: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+# enp5s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+# lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+```
+
+3. 系统安装完成后重启系统，此时需要将安装u盘拔下
+
+### 关于rNDC网卡无法识别的排查：
+
+1. 网卡不支持热插拔，故网卡状态改变后一般需要重新安装系统。不过通过以上在`系统安装界面`中的`network`板块中观察网卡情况，是一种简单快捷的方法，就是需要`强行拔电->开盖插拔->插电->在系统安装界面的network板块观察情况->强行拔电`。
+
+2. 插紧、拧紧！
+
+3. 针对疑似故障的组件，可以通过交换网卡、承载卡的位置排查
+
+4. 注意观察rDNC承载卡上的`运行状况指示灯`，常亮正常，闪烁不正常（可通过2.3.解决）
+
+https://support.quest.com/zh-cn/technical-documents/dr-series/dr4300/用户手册#TOPIC-592703
+
+## 系统安装完成态
+
+系统安装完成，参考`使用观盘源作为yum源`，为系统安装必备组件，通过`ifconfig ｜grep flag`确认所有网口已被成功识别；参考`ssh连接问题`，使用ssh远程连接系统
+
+## 更新rNDC网卡固件
+
+参考dell安装手册中的在centos上为rNDC网卡更新固件的步骤，更新固件。
+
+传输文件的方式可以使用`ssh远程连接`或者`挂载u盘`的方式，参考相关文档
+
+## 可能的账户名与密码
+
+root
+
+dell 
+
+192.168.88.46
+
+admin12345
+
+CM5QY03!
+
+seasw123.
+
+none
+
+seasw
