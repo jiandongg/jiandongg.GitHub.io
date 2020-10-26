@@ -124,33 +124,23 @@ GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet default_hugepagesz=1G hugepagesz
 
 注意：尽量不要隔离0号逻辑cpu、不要将过多cpu都隔离，以免影响linux自身性能。
 
-注意：使用lscpu查看cpu情况，其中
+注意：可以使用`lscpu`查看cpu情况。其中，我们能够配置CPU隔离的参数是逻辑CPU单位，也就是做下面的`NUMA node0 CPU(s):`。
 
-Threads per core：每个核有几个线程
+单numa机器`lscpu`：
 
-CPU Socket：有几个物理CPU
-
-core per socker：每个物理CPU有几个核心
-
-NUMA nodes : Non Uniform Memory Access Architecture，使众多服务器像单一系统那样运转，几个NUMA
-
-CPUs：有几个逻辑的处理器，=物理CPU个数*每个物理CPU核心个数*每个核心的线程个数
-
-其中，我们能够配置CPU隔离的参数是核心单位。
-
-注意：单numa机器`lscpu`
-
-```
+```shell
 [majd@localhost ~]$ lscpu
 Architecture:          x86_64
 CPU op-mode(s):        32-bit, 64-bit
 Byte Order:            Little Endian
-CPU(s):                4
+CPU(s):                4  //CPUs：有几个逻辑的处理器，=物理CPU个数*每个物理CPU核心个数*每个核心的线程个数
 On-line CPU(s) list:   0-3
-Thread(s) per core:    1
-Core(s) per socket:    1
-Socket(s):             4
-NUMA node(s):          1
+Thread(s) per core:    1  //每个核有几个线程。1时为不支持超线程，2时为支持超线程
+//打开关闭CPU的超线程功能在BIOS中。超线程功能在BIOS里是默认开启的，如果CPU支持超线程，则会自动模拟为物理核心X2；如果超线程没有开启，可以在开机时进入BIOS，找到Hyper-Threading项，改为enabled就是开启超线程
+//一般在功能测试时可以打开超线程，在性能测试时不打开超线程
+Core(s) per socket:    1  //每个物理CPU有几个核心
+Socket(s):             4  //有几个物理CPU
+NUMA node(s):          1  //NUMA nodes : Non Uniform Memory Access Architecture，使众多服务器像单一系统那样运转，几个NUMA
 Vendor ID:             GenuineIntel
 CPU family:            6
 Model:                 158
