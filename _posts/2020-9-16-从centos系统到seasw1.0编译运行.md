@@ -144,4 +144,12 @@
 
 12. 表项删除的两个主题：控制器下发命令或FE核主动删；表项超时FE核删除的两种方式：硬超时（表项安装到超时）、软超时（数据包表项命中到超时）
 
-seasw1.0m/lib/pof_common/rte_pof.h
+13. 打开或关闭pcap抓包的宏定义：seasw1.0m/lib/pof_common/rte_pof.h
+
+14. 代码中的pad[x]用于凑齐n64字节，提高内存管理效率
+
+15. 打开关闭自定义acl算法：/lib/pof_table/rte_pof_table_mm.c 开头的#define MYACL
+
+16. debug方法：函数屏蔽（return 0或者//或者#if 0 #endif）、telnet连接、延迟打印（每9999轮打印一次）、逐个包重放
+
+
