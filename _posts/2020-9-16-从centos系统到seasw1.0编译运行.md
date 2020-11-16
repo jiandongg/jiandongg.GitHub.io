@@ -24,6 +24,8 @@
 
    `rpm -ivh xxx.rpm`
 
+   svn可能也需要这么安装，如果有互联网连接，可以直接`yum -y install svn`
+
    万不得已，可以使用rpm安装，但有依赖不全的风险。
 
    2.6 拷贝源代码，善用svn，lsblk，mount，umount，eject命令
