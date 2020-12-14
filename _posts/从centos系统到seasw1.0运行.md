@@ -118,8 +118,6 @@
 
    `./seasw1.0/app/asm/asmpof xxxxx.asm ex.bin`
 
-   
-
 8. 执行seasw主程序
 
 `./build/app/seasw_fe -c 0x55 -- -s seasw.cli`
