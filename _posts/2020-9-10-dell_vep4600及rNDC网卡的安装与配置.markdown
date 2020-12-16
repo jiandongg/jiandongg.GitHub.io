@@ -131,3 +131,40 @@ seasw
 # 关闭超线程
 
 开机过程中的适当位置，按f2进入bios设置
+
+# 打开睿频
+
+查看实时的cpu频率 watch -n 0 "cat /proc/cpuinfo | grep -i mhz"
+
+在bios中的advanced energy setting中，打开powerstep选项，其中有trubo setting
+
+查看机器是否开启了睿频 cat /sys/devices/system/cpu/intel_pstate/no_turbo
+
+查看机器的运行模式 cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
+开启性能运行模式 cpupower -c all frequency-set -g performance
+
+查看cpu的最大频率限制 /sys/devices/system/cpu/intel_pstate/max_perf_pct
+
+文档：华为：关于EFI选项https://support.huawei.com/enterprise/zh/doc/EDOC1000039566/a2a1a7d0
+
+https://support.huawei.com/enterprise/zh/doc/EDOC1000163371/3ee36c34
+
+联想：关于uncore选项https://bbs.sangfor.com.cn/forum.php?mod=viewthread&tid=114175
+
+csdn：关于降频https://blog.csdn.net/zhaoxinfan/article/details/88258659
+
+关于运行模式https://blog.csdn.net/xiaofeng_yan/article/details/81665416
+
+
+# 性能测试
+
+yum -y install epel-release; yum -y install sysbench
+
+注意：cpu隔离的机器运行性能测试时，只能调用没有被隔离的cpu核心
+
+sysbench cpu run
+
+sysbench cpu --threads=2 run
+
+stress -c 2
