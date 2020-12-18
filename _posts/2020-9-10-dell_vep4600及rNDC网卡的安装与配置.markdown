@@ -168,3 +168,13 @@ sysbench cpu run
 sysbench cpu --threads=2 run
 
 stress -c 2
+
+# 查看是否是ssd盘
+
+cat /sys/block/sda/queue/rotational
+
+lsblk
+
+df -h
+
+lsscsi
